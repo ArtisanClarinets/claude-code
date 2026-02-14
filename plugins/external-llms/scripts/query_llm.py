@@ -4,8 +4,18 @@ import json
 import sys
 import urllib.request
 import urllib.error
+import urllib.parse
+
+def validate_url(url):
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme not in ('http', 'https'):
+        raise ValueError(f"Invalid URL scheme: {parsed.scheme}. Only 'http' and 'https' are allowed.")
+    return url
 
 def query_openai_compatible(api_key, base_url, model, prompt):
+    base_url = base_url.strip()
+    validate_url(base_url)
+
     url = base_url
     if not url.endswith("/chat/completions"):
          # Try to append if not present, but respect full URLs
@@ -14,9 +24,12 @@ def query_openai_compatible(api_key, base_url, model, prompt):
          else:
              url = f"{url}/chat/completions"
 
+    if '\n' in api_key or '\r' in api_key:
+        return "Error: API Key contains newline characters."
+
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
+        "Authorization": f"Bearer {api_key.strip()}"
     }
     data = {
         "model": model,
@@ -36,7 +49,14 @@ def query_openai_compatible(api_key, base_url, model, prompt):
         return f"Error: {str(e)}"
 
 def query_gemini(api_key, model, prompt):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    api_key = api_key.strip()
+    if '\n' in api_key or '\r' in api_key:
+        return "Error: API Key contains newline characters."
+
+    encoded_model = urllib.parse.quote(model)
+    encoded_key = urllib.parse.quote(api_key)
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{encoded_model}:generateContent?key={encoded_key}"
     headers = {"Content-Type": "application/json"}
     data = {
         "contents": [{"parts": [{"text": prompt}]}]
@@ -56,6 +76,9 @@ def query_gemini(api_key, model, prompt):
         return f"Error: {str(e)}"
 
 def query_ollama(base_url, model, prompt):
+    base_url = base_url.strip()
+    validate_url(base_url)
+
     url = f"{base_url}/api/generate"
     headers = {"Content-Type": "application/json"}
     data = {
@@ -85,43 +108,51 @@ def main():
     args = parser.parse_args()
     prompt_text = " ".join(args.prompt)
 
-    if args.provider == "openai":
-        api_key = os.environ.get("OPENAI_API_KEY")
-        if not api_key:
-            print("Error: OPENAI_API_KEY environment variable not set.")
-            sys.exit(1)
-        print(query_openai_compatible(api_key, "https://api.openai.com", args.model, prompt_text))
+    try:
+        if args.provider == "openai":
+            api_key = os.environ.get("OPENAI_API_KEY")
+            if not api_key:
+                print("Error: OPENAI_API_KEY environment variable not set.")
+                sys.exit(1)
+            print(query_openai_compatible(api_key, "https://api.openai.com", args.model, prompt_text))
 
-    elif args.provider == "gemini":
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            print("Error: GEMINI_API_KEY environment variable not set.")
-            sys.exit(1)
-        print(query_gemini(api_key, args.model, prompt_text))
+        elif args.provider == "gemini":
+            api_key = os.environ.get("GEMINI_API_KEY")
+            if not api_key:
+                print("Error: GEMINI_API_KEY environment variable not set.")
+                sys.exit(1)
+            print(query_gemini(api_key, args.model, prompt_text))
 
-    elif args.provider == "ollama":
-        base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-        print(query_ollama(base_url, args.model, prompt_text))
+        elif args.provider == "ollama":
+            base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+            print(query_ollama(base_url, args.model, prompt_text))
 
-    elif args.provider == "kimi":
-        api_key = os.environ.get("KIMI_API_KEY")
-        if not api_key:
-            print("Error: KIMI_API_KEY environment variable not set.")
-            sys.exit(1)
-        print(query_openai_compatible(api_key, "https://api.moonshot.cn", args.model, prompt_text))
+        elif args.provider == "kimi":
+            api_key = os.environ.get("KIMI_API_KEY")
+            if not api_key:
+                print("Error: KIMI_API_KEY environment variable not set.")
+                sys.exit(1)
+            print(query_openai_compatible(api_key, "https://api.moonshot.cn", args.model, prompt_text))
 
-    elif args.provider == "openrouter":
-        api_key = os.environ.get("OPENROUTER_API_KEY")
-        if not api_key:
-            print("Error: OPENROUTER_API_KEY environment variable not set.")
-            sys.exit(1)
-        print(query_openai_compatible(api_key, "https://openrouter.ai/api", args.model, prompt_text))
+        elif args.provider == "openrouter":
+            api_key = os.environ.get("OPENROUTER_API_KEY")
+            if not api_key:
+                print("Error: OPENROUTER_API_KEY environment variable not set.")
+                sys.exit(1)
+            print(query_openai_compatible(api_key, "https://openrouter.ai/api", args.model, prompt_text))
 
-    elif args.provider == "studio":
-        # Assuming generic OpenAI compatible endpoint, e.g. LM Studio
-        api_key = os.environ.get("STUDIO_API_KEY", "lm-studio") # Default dummy key for local
-        base_url = os.environ.get("STUDIO_BASE_URL", "http://localhost:1234")
-        print(query_openai_compatible(api_key, base_url, args.model, prompt_text))
+        elif args.provider == "studio":
+            # Assuming generic OpenAI compatible endpoint, e.g. LM Studio
+            api_key = os.environ.get("STUDIO_API_KEY", "lm-studio") # Default dummy key for local
+            base_url = os.environ.get("STUDIO_BASE_URL", "http://localhost:1234")
+            print(query_openai_compatible(api_key, base_url, args.model, prompt_text))
+
+    except ValueError as e:
+        print(f"Configuration Error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
