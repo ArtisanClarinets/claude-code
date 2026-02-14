@@ -9,5 +9,5 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 Query Kimi.
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider kimi --model moonshot-v1-8k --prompt "$ARGUMENTS"
+"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider kimi --model moonshot-v1-8k --prompt $ARGUMENTS
 ```

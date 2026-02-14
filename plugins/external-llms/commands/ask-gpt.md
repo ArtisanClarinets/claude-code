@@ -9,5 +9,5 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 Query OpenAI GPT.
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider openai --model gpt-4o --prompt "$ARGUMENTS"
+"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider openai --model gpt-4o --prompt $ARGUMENTS
 ```

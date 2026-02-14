@@ -80,47 +80,48 @@ def main():
     parser = argparse.ArgumentParser(description="Query external LLM providers.")
     parser.add_argument("--provider", required=True, choices=["openai", "gemini", "ollama", "kimi", "openrouter", "studio"], help="LLM Provider")
     parser.add_argument("--model", required=True, help="Model name")
-    parser.add_argument("--prompt", required=True, help="Prompt text")
+    parser.add_argument("--prompt", required=True, nargs='+', help="Prompt text")
 
     args = parser.parse_args()
+    prompt_text = " ".join(args.prompt)
 
     if args.provider == "openai":
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
             print("Error: OPENAI_API_KEY environment variable not set.")
             sys.exit(1)
-        print(query_openai_compatible(api_key, "https://api.openai.com", args.model, args.prompt))
+        print(query_openai_compatible(api_key, "https://api.openai.com", args.model, prompt_text))
 
     elif args.provider == "gemini":
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
             print("Error: GEMINI_API_KEY environment variable not set.")
             sys.exit(1)
-        print(query_gemini(api_key, args.model, args.prompt))
+        print(query_gemini(api_key, args.model, prompt_text))
 
     elif args.provider == "ollama":
         base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-        print(query_ollama(base_url, args.model, args.prompt))
+        print(query_ollama(base_url, args.model, prompt_text))
 
     elif args.provider == "kimi":
         api_key = os.environ.get("KIMI_API_KEY")
         if not api_key:
             print("Error: KIMI_API_KEY environment variable not set.")
             sys.exit(1)
-        print(query_openai_compatible(api_key, "https://api.moonshot.cn", args.model, args.prompt))
+        print(query_openai_compatible(api_key, "https://api.moonshot.cn", args.model, prompt_text))
 
     elif args.provider == "openrouter":
         api_key = os.environ.get("OPENROUTER_API_KEY")
         if not api_key:
             print("Error: OPENROUTER_API_KEY environment variable not set.")
             sys.exit(1)
-        print(query_openai_compatible(api_key, "https://openrouter.ai/api", args.model, args.prompt))
+        print(query_openai_compatible(api_key, "https://openrouter.ai/api", args.model, prompt_text))
 
     elif args.provider == "studio":
         # Assuming generic OpenAI compatible endpoint, e.g. LM Studio
         api_key = os.environ.get("STUDIO_API_KEY", "lm-studio") # Default dummy key for local
         base_url = os.environ.get("STUDIO_BASE_URL", "http://localhost:1234")
-        print(query_openai_compatible(api_key, base_url, args.model, args.prompt))
+        print(query_openai_compatible(api_key, base_url, args.model, prompt_text))
 
 if __name__ == "__main__":
     main()

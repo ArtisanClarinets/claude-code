@@ -9,5 +9,5 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 Query OpenRouter.
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider openrouter --model openai/gpt-3.5-turbo --prompt "$ARGUMENTS"
+"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider openrouter --model openai/gpt-3.5-turbo --prompt $ARGUMENTS
 ```

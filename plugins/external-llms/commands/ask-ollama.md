@@ -9,5 +9,5 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 Query Ollama locally.
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider ollama --model llama3 --prompt "$ARGUMENTS"
+"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider ollama --model llama3 --prompt $ARGUMENTS
 ```

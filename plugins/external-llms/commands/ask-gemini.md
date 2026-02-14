@@ -9,5 +9,5 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 Query Gemini.
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider gemini --model gemini-1.5-pro-latest --prompt "$ARGUMENTS"
+"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider gemini --model gemini-1.5-pro-latest --prompt $ARGUMENTS
 ```
