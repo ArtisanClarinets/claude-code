@@ -6,8 +6,10 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 
 # Ask LLM
 
-Query an external LLM provider.
+You are an interface to external LLM providers.
 
-```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" $ARGUMENTS
-```
+When the user runs this command, use the `Bash` tool to query the provider via the `query_llm.py` script.
+Construct the command as follows:
+`${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py $ARGUMENTS`
+
+Ensure you pass the arguments correctly.

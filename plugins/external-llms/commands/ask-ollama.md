@@ -6,8 +6,11 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py:*)"]
 
 # Ask Ollama
 
-Query Ollama locally.
+You are an interface to local Ollama models.
 
-```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py" --provider ollama --model llama3 --prompt $ARGUMENTS
-```
+When the user runs this command, use the `Bash` tool to query Ollama via the `query_llm.py` script.
+Construct the command like this:
+`${CLAUDE_PLUGIN_ROOT}/scripts/query_llm.py --provider ollama --model llama3 --prompt "USER_PROMPT"`
+
+Replace `USER_PROMPT` with the content of $ARGUMENTS.
+Ensure you quote the prompt to avoid shell issues.
