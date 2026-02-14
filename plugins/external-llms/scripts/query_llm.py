@@ -39,7 +39,21 @@ def query_openai_compatible(api_key, base_url, model, prompt):
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
         # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
-        with urllib.request.urlopen(req) as response:
+# Validate that the url uses only http or https schemes to prevent file:// or other unsafe schemes
+if not url.startswith("https://") and not url.startswith("http://"):
+    raise ValueError("Only HTTP(S) URLs are allowed for base_url.")
+
+req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
+try:
+    with urllib.request.urlopen(req) as response:
+        result = json.load(response)
+        if 'choices' in result and len(result['choices']) > 0:
+            return result['choices'][0]['message']['content']
+        return "Error: No response content found."
+except urllib.error.HTTPError as e:
+    return f"HTTP Error: {e.code} - {e.read().decode('utf-8')}"
+except Exception as e:
+    return f"Error: {str(e)}"
             result = json.load(response)
             if 'choices' in result and len(result['choices']) > 0:
                 return result['choices'][0]['message']['content']
