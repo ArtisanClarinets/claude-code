@@ -39,21 +39,7 @@ def query_openai_compatible(api_key, base_url, model, prompt):
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
         # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
-# Validate that the url uses only http or https schemes to prevent file:// or other unsafe schemes
-if not url.startswith("https://") and not url.startswith("http://"):
-    raise ValueError("Only HTTP(S) URLs are allowed for base_url.")
-
-req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
-try:
-    with urllib.request.urlopen(req) as response:
-        result = json.load(response)
-        if 'choices' in result and len(result['choices']) > 0:
-            return result['choices'][0]['message']['content']
-        return "Error: No response content found."
-except urllib.error.HTTPError as e:
-    return f"HTTP Error: {e.code} - {e.read().decode('utf-8')}"
-except Exception as e:
-    return f"Error: {str(e)}"
+        with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'choices' in result and len(result['choices']) > 0:
                 return result['choices'][0]['message']['content']
@@ -80,19 +66,7 @@ def query_gemini(api_key, model, prompt):
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
         # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
-import urllib.parse
-
-# ...
-
-# Before making the request, validate that the URL is safe and trusted
-parsed_url = urllib.parse.urlparse(req.full_url)
-if parsed_url.scheme not in ("http", "https"):
-    raise ValueError(f"Untrusted URL scheme: {parsed_url.scheme}")
-# Optionally, you can further restrict netloc to trusted hosts like:
-# if parsed_url.netloc != "generativelanguage.googleapis.com":
-#     raise ValueError(f"Untrusted host: {parsed_url.netloc}")
-
-with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'candidates' in result and len(result['candidates']) > 0:
                 content = result['candidates'][0]['content']['parts'][0]['text']
