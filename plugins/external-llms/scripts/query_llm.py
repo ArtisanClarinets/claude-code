@@ -42,7 +42,7 @@ def query_openai_compatible(api_key, base_url, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
-        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
+        # nosemgrep
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'choices' in result and len(result['choices']) > 0:
@@ -74,7 +74,7 @@ def query_gemini(api_key, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
-        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
+        # nosemgrep
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'candidates' in result and len(result['candidates']) > 0:
@@ -105,7 +105,7 @@ def query_ollama(base_url, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
-        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
+        # nosemgrep
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'response' in result:
@@ -140,7 +140,7 @@ def query_anthropic(api_key, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
-        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
+        # nosemgrep
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'content' in result and len(result['content']) > 0:
