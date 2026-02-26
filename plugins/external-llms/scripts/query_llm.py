@@ -24,6 +24,10 @@ def query_openai_compatible(api_key, base_url, model, prompt):
          else:
              url = f"{url}/chat/completions"
 
+    # Explicitly check scheme again just before usage for security audit compliance
+    if not url.startswith("https://") and not url.startswith("http://"):
+        raise ValueError("Only HTTP(S) URLs are allowed.")
+
     if '\n' in api_key or '\r' in api_key:
         return "Error: API Key contains newline characters."
 
@@ -38,6 +42,7 @@ def query_openai_compatible(api_key, base_url, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
+        # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'choices' in result and len(result['choices']) > 0:
@@ -57,6 +62,11 @@ def query_gemini(api_key, model, prompt):
     encoded_key = urllib.parse.quote(api_key)
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{encoded_model}:generateContent?key={encoded_key}"
+
+    # Explicitly check scheme just before usage for security audit compliance (redundant for hardcoded string but good practice)
+    if not url.startswith("https://"):
+         raise ValueError("Only HTTPS URLs are allowed.")
+
     headers = {"Content-Type": "application/json"}
     data = {
         "contents": [{"parts": [{"text": prompt}]}]
@@ -64,6 +74,7 @@ def query_gemini(api_key, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
+        # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'candidates' in result and len(result['candidates']) > 0:
@@ -80,6 +91,11 @@ def query_ollama(base_url, model, prompt):
     validate_url(base_url)
 
     url = f"{base_url}/api/generate"
+
+    # Explicitly check scheme just before usage for security audit compliance
+    if not url.startswith("https://") and not url.startswith("http://"):
+        raise ValueError("Only HTTP(S) URLs are allowed.")
+
     headers = {"Content-Type": "application/json"}
     data = {
         "model": model,
@@ -89,6 +105,7 @@ def query_ollama(base_url, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
+        # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'response' in result:
@@ -105,6 +122,11 @@ def query_anthropic(api_key, model, prompt):
         return "Error: API Key contains newline characters."
 
     url = "https://api.anthropic.com/v1/messages"
+
+    # Explicitly check scheme just before usage for security audit compliance
+    if not url.startswith("https://"):
+         raise ValueError("Only HTTPS URLs are allowed.")
+
     headers = {
         "x-api-key": api_key,
         "anthropic-version": "2023-06-01",
@@ -118,6 +140,7 @@ def query_anthropic(api_key, model, prompt):
 
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
+        # nosemgrep: python.lang.security.audit.urllib-urlopen.urllib-urlopen
         with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'content' in result and len(result['content']) > 0:
