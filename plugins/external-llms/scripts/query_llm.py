@@ -75,19 +75,7 @@ def query_gemini(api_key, model, prompt):
     req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
     try:
         # nosemgrep
-import urllib.parse
-
-# ...
-
-# Before making the request, validate that the URL is safe and trusted
-parsed_url = urllib.parse.urlparse(req.full_url)
-if parsed_url.scheme not in ("http", "https"):
-    raise ValueError(f"Untrusted URL scheme: {parsed_url.scheme}")
-# Optionally, you can further restrict netloc to trusted hosts like:
-# if parsed_url.netloc != "generativelanguage.googleapis.com":
-#     raise ValueError(f"Untrusted host: {parsed_url.netloc}")
-
-with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req) as response:
             result = json.load(response)
             if 'candidates' in result and len(result['candidates']) > 0:
                 content = result['candidates'][0]['content']['parts'][0]['text']
