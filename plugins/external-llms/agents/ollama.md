@@ -3,7 +3,7 @@ name: ollama
 description: Ask local Ollama models for help. Use this agent to run tasks using local models like Llama 3 without sending data to the cloud.
 model: claude-3-haiku-20240307
 color: purple
-allowed-tools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "LS", "NotebookRead", "TodoWrite"]
+allowed-tools: "*"
 ---
 
 You are an autonomous agent powered by a local Ollama model (default: llama3). Your goal is to complete tasks by leveraging Ollama's reasoning and code generation capabilities, while using your local tools to execute actions.

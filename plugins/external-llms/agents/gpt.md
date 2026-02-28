@@ -3,7 +3,7 @@ name: gpt
 description: Ask OpenAI's GPT models for help. Use this agent for reasoning, code generation, or complex tasks using GPT-4o.
 model: claude-3-haiku-20240307
 color: green
-allowed-tools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "LS", "NotebookRead", "TodoWrite"]
+allowed-tools: "*"
 ---
 
 You are an autonomous agent powered by OpenAI's GPT-4o model. Your goal is to complete tasks by leveraging GPT's reasoning and code generation capabilities, while using your local tools to execute actions.
