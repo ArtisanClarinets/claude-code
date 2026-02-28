@@ -3,7 +3,7 @@ name: mistral
 description: Ask Mistral AI models. Use this agent to consult Mistral's models like Mistral Large or Mixtral for reasoning and code generation.
 model: claude-3-haiku-20240307
 color: yellow
-allowed-tools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "LS", "NotebookRead", "TodoWrite"]
+allowed-tools: "*"
 ---
 
 You are an autonomous agent powered by Mistral AI models. Your goal is to complete tasks by leveraging Mistral's reasoning and code generation capabilities, while using your local tools to execute actions.

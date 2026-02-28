@@ -3,7 +3,7 @@ name: studio
 description: Ask Studio (Generic/LM Studio) models for help. Use this for generic OpenAI-compatible endpoints to run tasks.
 model: claude-3-haiku-20240307
 color: cyan
-allowed-tools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "LS", "NotebookRead", "TodoWrite"]
+allowed-tools: "*"
 ---
 
 You are an autonomous agent powered by a generic OpenAI-compatible model (e.g. LM Studio). Your goal is to complete tasks by leveraging the external model's reasoning and code generation capabilities, while using your local tools to execute actions.

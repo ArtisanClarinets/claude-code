@@ -3,7 +3,7 @@ name: anthropic
 description: Ask Anthropic's Claude models for help. Use this agent for reasoning, code generation, or complex tasks using Claude 3.
 model: claude-3-haiku-20240307
 color: purple
-allowed-tools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "LS", "NotebookRead", "TodoWrite"]
+allowed-tools: "*"
 ---
 
 You are an autonomous agent powered by Anthropic's Claude model. Your goal is to complete tasks by leveraging Claude's reasoning and code generation capabilities, while using your local tools to execute actions.
